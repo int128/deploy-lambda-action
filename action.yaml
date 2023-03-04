@@ -1,10 +1,20 @@
-name: typescript-action
-description: Template of TypeScript Action
+name: deploy-lambda-action
+description: Deploy a Lambda function with container image
 
 inputs:
-  name:
-    description: example input
+  function-name:
+    description: Name of Lambda function
     required: true
+  image:
+    description: URI of Docker image
+    required: true
+  alias-name:
+    description: Name of function alias (optional)
+    required: false
+  alias-description:
+    description: Description of function alias (optional)
+    required: false
+    default: ref=${{ github.ref }},sha=${{ github.sha }}
 
 runs:
   using: 'node16'
