@@ -1,103 +1,55 @@
-# typescript-action [![ts](https://github.com/int128/typescript-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/typescript-action/actions/workflows/ts.yaml)
+# deploy-lambda-action [![ts](https://github.com/int128/deploy-lambda-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/deploy-lambda-action/actions/workflows/ts.yaml)
 
-This is a template of TypeScript action.
-Inspired from https://github.com/actions/typescript-action.
-
-
-## Features
-
-- Ready to develop with the minimum configs
-  - Yarn
-  - Prettier
-  - ESLint
-  - tsconfig
-  - Jest
-- Automated continuous release
-- Keep consistency of generated files
-- Shipped with Renovate config
-
+This is an action to update an existing Lambda function.
 
 ## Getting Started
 
-Click `Use this template` to create a repository.
-
-An initial release `v0.0.0` is automatically created by GitHub Actions.
-You can see the generated files in `dist` directory on the tag.
-
-Then checkout your repository and test it. Node.js is required.
-
-```console
-$ git clone https://github.com/your/repo.git
-
-$ yarn
-$ yarn test
-```
-
-Create a pull request for a change.
-
-```console
-$ git checkout -b feature
-$ git commit -m 'Add feature'
-$ gh pr create -fd
-```
-
-Once you merge a pull request, a new minor release (such as `v0.1.0`) is created.
-
-
-### Stable release
-
-When you want to create a stable release, change the major version in [release workflow](.github/workflows/release.yaml).
-
-```yaml
-      - uses: int128/release-typescript-action@v1
-        with:
-          major-version: 1
-```
-
-Then a new stable release `v1.0.0` is created.
-
-
-## Specification
-
-To run this action, create a workflow as follows:
+Here is an example workflow to build and deploy a container image to Lambda function.
 
 ```yaml
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
-      - uses: int128/typescript-action@v1
+      - uses: actions/checkout@v3
+      - uses: aws-actions/configure-aws-credentials@v1
         with:
-          name: hello
+          role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
+      - uses: aws-actions/amazon-ecr-login@v1
+        id: ecr
+      - uses: docker/metadata-action@v4
+        id: metadata
+        with:
+          images: ${{ steps.ecr.outputs.registry }}/${{ github.repository }}
+          flavor: latest=false
+      - uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+
+      - uses: int128/deploy-lambda-action@v1
+        with:
+          function-name: my-function
+          image: ${{ steps.metadata.outputs.tags }}
 ```
+
+## Specification
 
 ### Inputs
 
 | Name | Default | Description
 |------|----------|------------
-| `name` | (required) | example input
-
+| `function-name` | (required) | Lambda function name
+| `image` | (required) | URI of container image, i.e., `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME`
+| `alias-name` | - | Alias name
+| `alias-description` | - | Alias description
 
 ### Outputs
 
 | Name | Description
 |------|------------
 | `example` | example output
-
-
-## Development
-
-### Release workflow
-
-When a pull request is merged into main branch, a new minor release is created by GitHub Actions.
-See https://github.com/int128/release-typescript-action for details.
-
-### Keep consistency of generated files
-
-If a pull request needs to be fixed by Prettier, an additional commit to fix it will be added by GitHub Actions.
-See https://github.com/int128/update-generated-files-action for details.
-
-### Dependency update
-
-You can enable Renovate to update the dependencies.
-This repository is shipped with the config https://github.com/int128/typescript-action-renovate-config.
