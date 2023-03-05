@@ -16,6 +16,14 @@ inputs:
     required: false
     default: ref=${{ github.ref }},sha=${{ github.sha }}
 
+outputs:
+  function-version:
+    description: Published version
+  function-version-arn:
+    description: ARN of published version
+  function-alias-arn:
+    description: ARN of alias
+
 runs:
   using: 'node16'
   main: 'dist/index.js'

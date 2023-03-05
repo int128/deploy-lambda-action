@@ -6,6 +6,7 @@ test('update function with new alias', async () => {
   const lambdaClientMock = mockClient(LambdaClient)
   lambdaClientMock.on(UpdateFunctionCodeCommand).resolves({
     Version: '3',
+    FunctionArn: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function:3',
   })
   lambdaClientMock.on(CreateAliasCommand).resolves({
     AliasArn: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function:pr-123',
@@ -18,5 +19,9 @@ test('update function with new alias', async () => {
       aliasName: 'pr-123',
       aliasDescription: 'ref=refs/heads/main,sha=0123456789abcdef',
     })
-  ).resolves.toBeUndefined()
+  ).resolves.toStrictEqual({
+    functionVersion: '3',
+    functionVersionARN: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function:3',
+    functionAliasARN: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function:pr-123',
+  })
 })
