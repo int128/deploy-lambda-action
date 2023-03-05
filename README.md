@@ -125,7 +125,7 @@ data "aws_iam_policy_document" "github_actions_deploy_lambda" {
 ### Inputs
 
 | Name | Description
-|------|----------|------------
+|------|------------
 | `function-name` | Lambda function name
 | `image-uri` | URI of container image, i.e., `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION` or `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME@DIGEST`
 | `alias-name` | Alias name (optional)
