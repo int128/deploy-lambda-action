@@ -34,7 +34,7 @@ jobs:
       - uses: int128/deploy-lambda-action@v1
         with:
           function-name: my-function
-          image: ${{ steps.metadata.outputs.tags }}
+          image-uri: ${{ steps.metadata.outputs.tags }}
 ```
 
 ## Specification
@@ -44,7 +44,7 @@ jobs:
 | Name | Default | Description
 |------|----------|------------
 | `function-name` | (required) | Lambda function name
-| `image` | (required) | URI of container image, i.e., `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME`
+| `image-uri` | (required) | URI of container image, i.e., `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME`
 | `alias-name` | - | Alias name
 | `alias-description` | - | Alias description
 

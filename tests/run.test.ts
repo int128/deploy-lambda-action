@@ -13,7 +13,7 @@ test('update function with new alias', async () => {
 
   await expect(
     run({
-      image: '123456789012.dkr.ecr.ap-northeast-1.amazonaws.com/my-image',
+      imageURI: '123456789012.dkr.ecr.ap-northeast-1.amazonaws.com/my-image',
       functionName: 'my-function',
       aliasName: 'pr-123',
       aliasDescription: 'ref=refs/heads/main,sha=0123456789abcdef',

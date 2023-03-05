@@ -5,7 +5,7 @@ inputs:
   function-name:
     description: Name of Lambda function
     required: true
-  image:
+  image-uri:
     description: URI of Docker image
     required: true
   alias-name:
