@@ -13,7 +13,7 @@ import {
 
 type Inputs = {
   functionName: string
-  image: string
+  imageURI: string
   aliasName: string
   aliasDescription: string
 }
@@ -21,11 +21,11 @@ type Inputs = {
 export const run = async (inputs: Inputs): Promise<void> => {
   const client = new LambdaClient({})
 
-  core.info(`Updating function ${inputs.functionName} to ${inputs.image}`)
+  core.info(`Updating function ${inputs.functionName} to ${inputs.imageURI}`)
   const updatedFunction = await client.send(
     new UpdateFunctionCodeCommand({
       FunctionName: inputs.functionName,
-      ImageUri: inputs.image,
+      ImageUri: inputs.imageURI,
       Publish: true,
     })
   )
