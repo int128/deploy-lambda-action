@@ -18,7 +18,13 @@ type Inputs = {
   aliasDescription: string
 }
 
-export const run = async (inputs: Inputs): Promise<void> => {
+type Outputs = {
+  functionVersion: string
+  functionVersionARN: string
+  functionAliasARN?: string
+}
+
+export const run = async (inputs: Inputs): Promise<Outputs> => {
   const client = new LambdaClient({})
 
   core.info(`Updating function ${inputs.functionName} to ${inputs.imageURI}`)
@@ -30,13 +36,18 @@ export const run = async (inputs: Inputs): Promise<void> => {
     })
   )
   const functionVersion = updatedFunction.Version
+  const functionVersionARN = updatedFunction.FunctionArn
   if (functionVersion === undefined) {
-    throw new Error(`internal error: got undefined Version`)
+    throw new Error(`internal error: Version is undefined Version`)
+  }
+  if (functionVersionARN === undefined) {
+    throw new Error(`internal error: FunctionArn is undefined`)
   }
   core.info(`Published version ${functionVersion}`)
+  core.info(`Available version ${functionVersionARN}`)
 
   if (!inputs.aliasName) {
-    return
+    return { functionVersion, functionVersionARN }
   }
   const alias = await createOrUpdateAlias(client, {
     FunctionName: inputs.functionName,
@@ -44,7 +55,12 @@ export const run = async (inputs: Inputs): Promise<void> => {
     Name: inputs.aliasName,
     Description: inputs.aliasDescription,
   })
-  core.info(`Alias ${String(alias.AliasArn)} is available`)
+  const functionAliasARN = alias.AliasArn
+  if (functionAliasARN === undefined) {
+    throw new Error(`internal error: AliasArn is undefined`)
+  }
+  core.info(`Available alias ${functionAliasARN}`)
+  return { functionVersion, functionVersionARN, functionAliasARN }
 }
 
 const createOrUpdateAlias = async (

@@ -135,4 +135,6 @@ data "aws_iam_policy_document" "github_actions_deploy_lambda" {
 
 | Name | Description
 |------|------------
-| `example` | example output
+| `function-version` | Published version
+| `function-version-arn` | ARN of published version
+| `function-alias-arn` | ARN of alias
