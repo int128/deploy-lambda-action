@@ -112,6 +112,8 @@ data "aws_iam_policy_document" "github_actions_deploy_lambda" {
     effect = "Allow"
     actions = [
       "lambda:UpdateFunctionCode",
+      "lambda:CreateAlias",
+      "lambda:UpdateAlias",
     ]
     resources = [
       "arn:aws:lambda:REGION:ACCOUNT:function:FUNCTION",
