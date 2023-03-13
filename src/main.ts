@@ -4,7 +4,8 @@ import { run } from './run'
 const main = async (): Promise<void> => {
   const outputs = await run({
     functionName: core.getInput('function-name', { required: true }),
-    imageURI: core.getInput('image-uri', { required: true }),
+    imageURI: core.getInput('image-uri') || undefined,
+    zipPath: core.getInput('zip-path') || undefined,
     aliasName: core.getInput('alias-name'),
     aliasDescription: core.getInput('alias-description'),
   })

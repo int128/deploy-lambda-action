@@ -1,11 +1,10 @@
 # deploy-lambda-action [![ts](https://github.com/int128/deploy-lambda-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/deploy-lambda-action/actions/workflows/ts.yaml)
 
 This is an action to deploy a container image to an existing Lambda function.
-See also the official docs of [deploying Lambda functions as container images](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-images.html).
 
 ## Getting Started
 
-To deploy a container image to a Lambda function:
+To [deploy a container image to a Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-images.html):
 
 ```yaml
 jobs:
@@ -18,6 +17,21 @@ jobs:
         with:
           function-name: my-function
           image-uri: ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION
+```
+
+To [deploy an archive to a Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/configuration-function-zip.html):
+
+```yaml
+jobs:
+  deploy:
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
+      - uses: int128/create-ecr-repository-action@v1
+        with:
+          function-name: my-function
+          zip-path: main.zip
 ```
 
 This action publishes a new version of Lambda function.
@@ -43,7 +57,9 @@ jobs:
 This action creates an alias or updates it to the published version.
 It is useful for the pull request preview environment such as `pr-12345`.
 
-### Full example
+## Full examples
+
+### Lambda function with container image
 
 Here is an example to build and deploy a container image to Lambda function.
 
@@ -94,6 +110,46 @@ When a branch is pushed,
 - It builds a container image and pushes it into ECR.
 - It deploys it to an alias of branch name such as `main` or `production`.
 
+### Lambda function with archive
+
+Here is an example to build Go application and deploy it to Lambda function.
+
+```yaml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+
+      # build
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 1.20
+      - run: go build -o main
+      - run: zip main.zip main
+
+      # deploy
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
+      - uses: int128/deploy-lambda-action@v1
+        with:
+          function-name: my-function
+          zip-path: main.zip
+          alias-name: ${{ github.event.pull_request.number || github.ref_name }}
+```
+
+When a pull request is opened or updated,
+
+- It deploys it to an alias of pull request number such as `12345`.
+
+When a branch is pushed,
+
+- It deploys it to an alias of branch name such as `main` or `production`.
+
 ## Prepare environment
 
 ### IAM
@@ -130,6 +186,7 @@ data "aws_iam_policy_document" "github_actions_deploy_lambda" {
 |------|------------
 | `function-name` | Lambda function name
 | `image-uri` | URI of container image, i.e., `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION` or `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME@DIGEST`
+| `zip-path` | Path to an archive
 | `alias-name` | Alias name (optional)
 | `alias-description` | Alias description (optional)
 

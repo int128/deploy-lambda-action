@@ -10,10 +10,12 @@ import {
   UpdateAliasCommandOutput,
   UpdateFunctionCodeCommand,
 } from '@aws-sdk/client-lambda'
+import { readFile } from 'fs/promises'
 
 type Inputs = {
   functionName: string
-  imageURI: string
+  imageURI?: string
+  zipPath?: string
   aliasName: string
   aliasDescription: string
 }
@@ -26,15 +28,7 @@ type Outputs = {
 
 export const run = async (inputs: Inputs): Promise<Outputs> => {
   const client = new LambdaClient({})
-
-  core.info(`Updating function ${inputs.functionName} to ${inputs.imageURI}`)
-  const updatedFunction = await client.send(
-    new UpdateFunctionCodeCommand({
-      FunctionName: inputs.functionName,
-      ImageUri: inputs.imageURI,
-      Publish: true,
-    })
-  )
+  const updatedFunction = await updateFunctionCode(client, inputs)
   const functionVersion = updatedFunction.Version
   const functionVersionARN = updatedFunction.FunctionArn
   if (functionVersion === undefined) {
@@ -61,6 +55,31 @@ export const run = async (inputs: Inputs): Promise<Outputs> => {
   }
   core.info(`Available alias ${functionAliasARN}`)
   return { functionVersion, functionVersionARN, functionAliasARN }
+}
+
+const updateFunctionCode = async (client: LambdaClient, inputs: Inputs) => {
+  if (inputs.zipPath) {
+    core.info(`Updating function ${inputs.functionName} to archive ${inputs.zipPath}`)
+    const zipFile = await readFile(inputs.zipPath)
+    return await client.send(
+      new UpdateFunctionCodeCommand({
+        FunctionName: inputs.functionName,
+        ZipFile: zipFile,
+        Publish: true,
+      })
+    )
+  }
+  if (inputs.imageURI) {
+    core.info(`Updating function ${inputs.functionName} to image ${inputs.imageURI}`)
+    return await client.send(
+      new UpdateFunctionCodeCommand({
+        FunctionName: inputs.functionName,
+        ImageUri: inputs.imageURI,
+        Publish: true,
+      })
+    )
+  }
+  throw new Error(`either image-uri or zip-path must be set`)
 }
 
 const createOrUpdateAlias = async (
