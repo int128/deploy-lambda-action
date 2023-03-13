@@ -7,7 +7,10 @@ inputs:
     required: true
   image-uri:
     description: URI of Docker image
-    required: true
+    required: false
+  zip-path:
+    description: Path to an archive
+    required: false
   alias-name:
     description: Name of function alias (optional)
     required: false
