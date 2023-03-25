@@ -139,12 +139,12 @@ jobs:
         with:
           function-name: my-function
           zip-path: main.zip
-          alias-name: ${{ github.event.pull_request.number || github.ref_name }}
+          alias-name: ${{ github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number) || github.ref_name }}
 ```
 
 When a pull request is opened or updated,
 
-- It deploys it to an alias of pull request number such as `12345`.
+- It deploys it to an alias of pull request number such as `pr-12345`.
 
 When a branch is pushed,
 
