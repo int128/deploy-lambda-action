@@ -157,6 +157,7 @@ When a branch is pushed,
 You need to attach the permission to the IAM Role of GitHub Actions.
 
 ```hcl
+# terraform
 resource "aws_iam_role_policy" "github_actions_deploy_lambda" {
   role   = aws_iam_role.github_actions_deploy_lambda.id
   name   = "update-lambda"
@@ -189,6 +190,8 @@ data "aws_iam_policy_document" "github_actions_deploy_lambda" {
 | `zip-path` | Path to an archive
 | `alias-name` | Alias name (optional)
 | `alias-description` | Alias description (optional)
+
+Either `image-uri` or `zip-path` must be set.
 
 ### Outputs
 
