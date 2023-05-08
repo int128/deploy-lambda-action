@@ -13,7 +13,7 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
-      - uses: int128/create-ecr-repository-action@v1
+      - uses: int128/deploy-lambda-action@v1
         with:
           function-name: my-function
           image-uri: ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION
@@ -28,7 +28,7 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
-      - uses: int128/create-ecr-repository-action@v1
+      - uses: int128/deploy-lambda-action@v1
         with:
           function-name: my-function
           zip-path: main.zip
@@ -47,7 +47,7 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
-      - uses: int128/create-ecr-repository-action@v1
+      - uses: int128/deploy-lambda-action@v1
         with:
           function-name: my-function
           image-uri: ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION
