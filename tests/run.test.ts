@@ -18,7 +18,7 @@ test('update function image with new alias', async () => {
       functionName: 'my-function',
       aliasName: 'pr-123',
       aliasDescription: 'ref=refs/heads/main,sha=0123456789abcdef',
-    })
+    }),
   ).resolves.toStrictEqual({
     functionVersion: '3',
     functionVersionARN: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function:3',
@@ -42,7 +42,7 @@ test('update function zip with new alias', async () => {
       functionName: 'my-function',
       aliasName: 'pr-123',
       aliasDescription: 'ref=refs/heads/main,sha=0123456789abcdef',
-    })
+    }),
   ).resolves.toStrictEqual({
     functionVersion: '3',
     functionVersionARN: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function:3',
