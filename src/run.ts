@@ -66,7 +66,7 @@ const updateFunctionCode = async (client: LambdaClient, inputs: Inputs) => {
         FunctionName: inputs.functionName,
         ZipFile: zipFile,
         Publish: true,
-      })
+      }),
     )
   }
   if (inputs.imageURI) {
@@ -76,7 +76,7 @@ const updateFunctionCode = async (client: LambdaClient, inputs: Inputs) => {
         FunctionName: inputs.functionName,
         ImageUri: inputs.imageURI,
         Publish: true,
-      })
+      }),
     )
   }
   throw new Error(`either image-uri or zip-path must be set`)
@@ -84,7 +84,7 @@ const updateFunctionCode = async (client: LambdaClient, inputs: Inputs) => {
 
 const createOrUpdateAlias = async (
   client: LambdaClient,
-  input: CreateAliasCommandInput & UpdateAliasCommandInput
+  input: CreateAliasCommandInput & UpdateAliasCommandInput,
 ): Promise<CreateAliasCommandOutput | UpdateAliasCommandOutput> => {
   core.info(`Creating alias ${String(input.Name)}`)
   try {
