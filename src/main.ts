@@ -14,4 +14,7 @@ const main = async (): Promise<void> => {
   core.setOutput('function-alias-arn', outputs.functionAliasARN)
 }
 
-main().catch((e) => core.setFailed(e instanceof Error ? e : String(e)))
+main().catch((e: Error) => {
+  core.setFailed(e)
+  console.error(e)
+})
