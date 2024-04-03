@@ -9,8 +9,8 @@ dependencies:
     specifier: 1.10.1
     version: 1.10.1
   '@aws-sdk/client-lambda':
-    specifier: 3.540.0
-    version: 3.540.0
+    specifier: 3.548.0
+    version: 3.548.0
 
 devDependencies:
   '@tsconfig/node20':
@@ -131,8 +131,8 @@ packages:
       tslib: 1.14.1
     dev: false
 
-  /@aws-sdk/client-lambda@3.540.0:
-    resolution: {integrity: sha512-pAVEUlQqpzTCpOmdnSXub+wjTtyJAwJFdmGW7rHpYpwQ4HfPhmN/vB6bczdl2vQNArfwS86AzTJNsftc3ID46g==}
+  /@aws-sdk/client-lambda@3.548.0:
+    resolution: {integrity: sha512-yf27Z1NbA68Ow/gUsaV+yBuQJHAWvvwvzp75l5coSGWW6/eXufbI4QEPyP1NDz1xjbyJRy/CQXewuvoP8w7OvA==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
