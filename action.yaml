@@ -3,19 +3,19 @@ description: Deploy a Lambda function with container image
 
 inputs:
   function-name:
-    description: Name of Lambda function
+    description: Name of the function
     required: true
   image-uri:
-    description: URI of Docker image
+    description: URI of the container image
     required: false
   zip-path:
-    description: Path to an archive
+    description: Path to the archive
     required: false
   alias-name:
-    description: Name of function alias (optional)
+    description: Name of the function alias (optional)
     required: false
   alias-description:
-    description: Description of function alias (optional)
+    description: Description of the function alias (optional)
     required: false
     default: ref=${{ github.ref }},sha=${{ github.sha }}
 

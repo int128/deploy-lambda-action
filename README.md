@@ -193,13 +193,13 @@ This action is mostly equivalent to [`aws lambda update-function-code`](https://
 
 ### Inputs
 
-| Name                | Description                                                                                                                             |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `function-name`     | Lambda function name                                                                                                                    |
-| `image-uri`         | URI of container image, i.e., `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION` or `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME@DIGEST` |
-| `zip-path`          | Path to an archive                                                                                                                      |
-| `alias-name`        | Alias name (optional)                                                                                                                   |
-| `alias-description` | Alias description (optional)                                                                                                            |
+| Name                | Description                                                                                                                                 |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `function-name`     | Name of the function                                                                                                                        |
+| `image-uri`         | URI of the container image, i.e., `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION` or `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME@DIGEST` |
+| `zip-path`          | Path to the archive                                                                                                                         |
+| `alias-name`        | Name of the function alias (optional)                                                                                                       |
+| `alias-description` | Description of the function alias (optional)                                                                                                |
 
 Either `image-uri` or `zip-path` must be set.
 
