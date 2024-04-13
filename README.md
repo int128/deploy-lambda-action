@@ -1,10 +1,10 @@
 # deploy-lambda-action [![ts](https://github.com/int128/deploy-lambda-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/deploy-lambda-action/actions/workflows/ts.yaml)
 
-This is an action to deploy a container image to an existing Lambda function.
+This is an action to deploy a container image or archive to an existing Lambda function.
 
 ## Getting Started
 
-To [deploy a container image to a Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-images.html):
+To [update the container image of a Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-images.html),
 
 ```yaml
 jobs:
@@ -19,7 +19,7 @@ jobs:
           image-uri: ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION
 ```
 
-To [deploy an archive to a Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/configuration-function-zip.html):
+To [update the code of a Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/configuration-function-zip.html),
 
 ```yaml
 jobs:
@@ -71,12 +71,13 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
+          aws-region: REGION
 
-      # build
+      # Build a container image
       - uses: aws-actions/amazon-ecr-login@v1
         id: ecr
       - uses: docker/metadata-action@v4
@@ -90,7 +91,7 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
 
-      # deploy
+      # Deploy a function
       - uses: int128/deploy-lambda-action@v1
         with:
           function-name: my-function
@@ -122,19 +123,20 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      # build
+      # Build an archive
       - uses: actions/setup-go@v4
         with:
           go-version: 1.20
       - run: go build -o main
       - run: zip main.zip main
 
-      # deploy
-      - uses: aws-actions/configure-aws-credentials@v1
+      # Deploy a function
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
+          aws-region: REGION
       - uses: int128/deploy-lambda-action@v1
         with:
           function-name: my-function
@@ -154,10 +156,16 @@ When a branch is pushed,
 
 ### IAM
 
-You need to attach the permission to the IAM Role of GitHub Actions.
+This action requires the following permissions:
+
+- `lambda:UpdateFunctionCode`
+- `lambda:CreateAlias`
+- `lambda:UpdateAlias`
+
+Here is an example of IAM Role for GitHub Actions.
 
 ```hcl
-# terraform
+# Terraform
 resource "aws_iam_role_policy" "github_actions_deploy_lambda" {
   role   = aws_iam_role.github_actions_deploy_lambda.id
   name   = "update-lambda"
@@ -181,22 +189,24 @@ data "aws_iam_policy_document" "github_actions_deploy_lambda" {
 
 ## Specification
 
+This action is mostly equivalent to [`aws lambda update-function-code`](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/lambda/update-function-code.html) command.
+
 ### Inputs
 
-| Name | Description
-|------|------------
-| `function-name` | Lambda function name
-| `image-uri` | URI of container image, i.e., `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION` or `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME@DIGEST`
-| `zip-path` | Path to an archive
-| `alias-name` | Alias name (optional)
-| `alias-description` | Alias description (optional)
+| Name                | Description                                                                                                                             |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `function-name`     | Lambda function name                                                                                                                    |
+| `image-uri`         | URI of container image, i.e., `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION` or `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME@DIGEST` |
+| `zip-path`          | Path to an archive                                                                                                                      |
+| `alias-name`        | Alias name (optional)                                                                                                                   |
+| `alias-description` | Alias description (optional)                                                                                                            |
 
 Either `image-uri` or `zip-path` must be set.
 
 ### Outputs
 
-| Name | Description
-|------|------------
-| `function-version` | Published version
-| `function-version-arn` | ARN of published version
-| `function-alias-arn` | ARN of alias
+| Name                   | Description              |
+| ---------------------- | ------------------------ |
+| `function-version`     | Published version        |
+| `function-version-arn` | ARN of published version |
+| `function-alias-arn`   | ARN of alias             |
