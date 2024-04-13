@@ -6,8 +6,8 @@ const main = async (): Promise<void> => {
     functionName: core.getInput('function-name', { required: true }),
     imageURI: core.getInput('image-uri') || undefined,
     zipPath: core.getInput('zip-path') || undefined,
-    aliasName: core.getInput('alias-name'),
-    aliasDescription: core.getInput('alias-description'),
+    aliasName: core.getInput('alias-name') || undefined,
+    aliasDescription: core.getInput('alias-description') || undefined,
   })
   core.setOutput('function-version', outputs.functionVersion)
   core.setOutput('function-version-arn', outputs.functionVersionARN)

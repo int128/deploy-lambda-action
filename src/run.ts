@@ -1,4 +1,5 @@
 import * as core from '@actions/core'
+import * as fs from 'fs/promises'
 import {
   CreateAliasCommand,
   CreateAliasCommandInput,
@@ -10,14 +11,14 @@ import {
   UpdateAliasCommandOutput,
   UpdateFunctionCodeCommand,
 } from '@aws-sdk/client-lambda'
-import { readFile } from 'fs/promises'
+import assert from 'assert'
 
 type Inputs = {
   functionName: string
   imageURI?: string
   zipPath?: string
-  aliasName: string
-  aliasDescription: string
+  aliasName?: string
+  aliasDescription?: string
 }
 
 type Outputs = {
@@ -31,14 +32,10 @@ export const run = async (inputs: Inputs): Promise<Outputs> => {
   const updatedFunction = await updateFunctionCode(client, inputs)
   const functionVersion = updatedFunction.Version
   const functionVersionARN = updatedFunction.FunctionArn
-  if (functionVersion === undefined) {
-    throw new Error(`internal error: Version is undefined Version`)
-  }
-  if (functionVersionARN === undefined) {
-    throw new Error(`internal error: FunctionArn is undefined`)
-  }
   core.info(`Published version ${functionVersion}`)
   core.info(`Available version ${functionVersionARN}`)
+  assert(functionVersion)
+  assert(functionVersionARN)
 
   if (!inputs.aliasName) {
     return { functionVersion, functionVersionARN }
@@ -50,17 +47,15 @@ export const run = async (inputs: Inputs): Promise<Outputs> => {
     Description: inputs.aliasDescription,
   })
   const functionAliasARN = alias.AliasArn
-  if (functionAliasARN === undefined) {
-    throw new Error(`internal error: AliasArn is undefined`)
-  }
   core.info(`Available alias ${functionAliasARN}`)
+  assert(functionAliasARN)
   return { functionVersion, functionVersionARN, functionAliasARN }
 }
 
 const updateFunctionCode = async (client: LambdaClient, inputs: Inputs) => {
   if (inputs.zipPath) {
     core.info(`Updating function ${inputs.functionName} to archive ${inputs.zipPath}`)
-    const zipFile = await readFile(inputs.zipPath)
+    const zipFile = await fs.readFile(inputs.zipPath)
     return await client.send(
       new UpdateFunctionCodeCommand({
         FunctionName: inputs.functionName,
