@@ -82,9 +82,12 @@ const updateFunctionCode = async (client: LambdaClient, inputs: Inputs) => {
 }
 
 const parseArchitecture = (architecture: string | undefined): Architecture[] | undefined => {
-  if (!architecture) return undefined
-  if (architecture === 'x86_64') return [architecture]
-  if (architecture === 'arm64') return [architecture]
+  if (!architecture) {
+    return undefined
+  }
+  if (architecture === Architecture.x86_64 || architecture === Architecture.arm64) {
+    return [architecture]
+  }
   throw new Error(`unknown architecture: ${architecture}`)
 }
 
