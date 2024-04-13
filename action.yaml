@@ -1,5 +1,5 @@
 name: deploy-lambda-action
-description: Deploy a Lambda function with container image
+description: Deploy the code or container image to an existing Lambda function
 
 inputs:
   function-name:
@@ -12,7 +12,7 @@ inputs:
     description: Path to the archive
     required: false
   alias-name:
-    description: Name of the function alias (optional)
+    description: If set, create or update the function alias (optional)
     required: false
   alias-description:
     description: Description of the function alias (optional)
