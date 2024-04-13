@@ -198,7 +198,7 @@ This action is mostly equivalent to [`aws lambda update-function-code`](https://
 | `function-name`     | Name of the function                                                                                                                        |
 | `image-uri`         | URI of the container image, i.e., `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION` or `ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME@DIGEST` |
 | `zip-path`          | Path to the archive                                                                                                                         |
-| `alias-name`        | Name of the function alias (optional)                                                                                                       |
+| `alias-name`        | If set, create or update the function alias (optional)                                                                                      |
 | `alias-description` | Description of the function alias (optional)                                                                                                |
 
 Either `image-uri` or `zip-path` must be set.
