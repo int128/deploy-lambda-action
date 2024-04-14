@@ -88,7 +88,7 @@ const parseArchitecture = (architecture: string | undefined): Architecture[] | u
   if (architecture === Architecture.x86_64 || architecture === Architecture.arm64) {
     return [architecture]
   }
-  throw new Error(`unknown architecture: ${architecture}`)
+  throw new Error(`architecture must be either ${Architecture.x86_64} or ${Architecture.arm64}: ${architecture}`)
 }
 
 const createOrUpdateAlias = async (
