@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as fs from 'fs/promises'
 import {
+  Architecture,
   CreateAliasCommand,
   CreateAliasCommandInput,
   CreateAliasCommandOutput,
@@ -17,6 +18,7 @@ type Inputs = {
   functionName: string
   imageURI?: string
   zipPath?: string
+  architecture?: string
   aliasName?: string
   aliasDescription?: string
 }
@@ -61,6 +63,7 @@ const updateFunctionCode = async (client: LambdaClient, inputs: Inputs) => {
         FunctionName: inputs.functionName,
         ZipFile: zipFile,
         Publish: true,
+        Architectures: parseArchitecture(inputs.architecture),
       }),
     )
   }
@@ -71,10 +74,21 @@ const updateFunctionCode = async (client: LambdaClient, inputs: Inputs) => {
         FunctionName: inputs.functionName,
         ImageUri: inputs.imageURI,
         Publish: true,
+        Architectures: parseArchitecture(inputs.architecture),
       }),
     )
   }
   throw new Error(`either image-uri or zip-path must be set`)
+}
+
+const parseArchitecture = (architecture: string | undefined): Architecture[] | undefined => {
+  if (!architecture) {
+    return undefined
+  }
+  if (architecture === Architecture.x86_64 || architecture === Architecture.arm64) {
+    return [architecture]
+  }
+  throw new Error(`architecture must be either ${Architecture.x86_64} or ${Architecture.arm64}: ${architecture}`)
 }
 
 const createOrUpdateAlias = async (

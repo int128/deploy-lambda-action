@@ -11,6 +11,9 @@ inputs:
   zip-path:
     description: Path to the archive
     required: false
+  architecture:
+    description: If set, update the architecture of the function (optional)
+    required: false
   alias-name:
     description: If set, create or update the function alias (optional)
     required: false

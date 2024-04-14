@@ -6,6 +6,7 @@ const main = async (): Promise<void> => {
     functionName: core.getInput('function-name', { required: true }),
     imageURI: core.getInput('image-uri') || undefined,
     zipPath: core.getInput('zip-path') || undefined,
+    architecture: core.getInput('architecture') || undefined,
     aliasName: core.getInput('alias-name') || undefined,
     aliasDescription: core.getInput('alias-description') || undefined,
   })
