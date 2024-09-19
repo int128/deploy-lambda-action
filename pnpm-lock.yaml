@@ -12,8 +12,8 @@ importers:
         specifier: 1.10.1
         version: 1.10.1
       '@aws-sdk/client-lambda':
-        specifier: 3.654.0
-        version: 3.654.0
+        specifier: 3.655.0
+        version: 3.655.0
     devDependencies:
       '@tsconfig/node20':
         specifier: 20.1.4
@@ -85,8 +85,8 @@ packages:
   '@aws-crypto/util@5.2.0':
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
 
-  '@aws-sdk/client-lambda@3.654.0':
-    resolution: {integrity: sha512-/ITRFpQeutTNsyZ5AjLCnNKM08rPq5WSEtNoJ2zLOAinOUnPpLFZ3p6w+5AVc2FYTeFY5gxby84Ejs4gzS8/Mg==}
+  '@aws-sdk/client-lambda@3.655.0':
+    resolution: {integrity: sha512-/XB9oLcwZUeUxxS9WPHrmPkfFTE6dlBcAuMKdKZnfGfzGbU1EKDsFW0QH50fhjGCO3fk4xw8ZmHyNsk5uhqFRQ==}
     engines: {node: '>=16.0.0'}
 
   '@aws-sdk/client-sso-oidc@3.654.0':
@@ -2069,7 +2069,7 @@ snapshots:
       '@smithy/util-utf8': 2.3.0
       tslib: 2.6.2
 
-  '@aws-sdk/client-lambda@3.654.0':
+  '@aws-sdk/client-lambda@3.655.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
