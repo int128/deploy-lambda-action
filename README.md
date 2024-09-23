@@ -126,9 +126,9 @@ jobs:
       - uses: actions/checkout@v4
 
       # Build an archive
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: 1.20
+          go-version-file: go.mod
       - run: go build -o main
       - run: zip main.zip main
 
