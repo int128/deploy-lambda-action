@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest'
 import { mockClient } from 'aws-sdk-client-mock'
 import { CreateAliasCommand, LambdaClient, UpdateFunctionCodeCommand } from '@aws-sdk/client-lambda'
 import { run } from '../src/run.js'
