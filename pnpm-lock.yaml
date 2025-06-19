@@ -12,8 +12,8 @@ importers:
         specifier: 1.11.1
         version: 1.11.1
       '@aws-sdk/client-lambda':
-        specifier: 3.830.0
-        version: 3.830.0
+        specifier: 3.833.0
+        version: 3.833.0
     devDependencies:
       '@eslint/js':
         specifier: 9.29.0
@@ -87,8 +87,8 @@ packages:
   '@aws-crypto/util@5.2.0':
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
 
-  '@aws-sdk/client-lambda@3.830.0':
-    resolution: {integrity: sha512-rdZPFteEN4Tw8vNVKh5rwPhf2zJz3cazx2gf1NSB8+GtleefY6bsAqyOQueSMSkE6fGZw7kmaPJBvWDxzMX4nQ==}
+  '@aws-sdk/client-lambda@3.833.0':
+    resolution: {integrity: sha512-m56p1MB+/t+QFfZZzQoqlVcITn8PRYa7yzvuO2LbR9YsQ97uZyVCu970RAPSkW6/SjyWTUvXtQw3x/1KITcrvw==}
     engines: {node: '>=18.0.0'}
 
   '@aws-sdk/client-sso@3.830.0':
@@ -1566,7 +1566,7 @@ snapshots:
       '@smithy/util-utf8': 2.3.0
       tslib: 2.6.2
 
-  '@aws-sdk/client-lambda@3.830.0':
+  '@aws-sdk/client-lambda@3.833.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
