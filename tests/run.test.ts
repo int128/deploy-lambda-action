@@ -1,6 +1,6 @@
-import { expect, test } from 'vitest'
-import { mockClient } from 'aws-sdk-client-mock'
 import { CreateAliasCommand, LambdaClient, UpdateFunctionCodeCommand } from '@aws-sdk/client-lambda'
+import { mockClient } from 'aws-sdk-client-mock'
+import { expect, test } from 'vitest'
 import { run } from '../src/run.js'
 
 test('update function image with new alias', async () => {
