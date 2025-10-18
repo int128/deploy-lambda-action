@@ -1,18 +1,18 @@
+import assert from 'node:assert'
+import * as fs from 'node:fs/promises'
 import * as core from '@actions/core'
-import * as fs from 'fs/promises'
 import {
   Architecture,
   CreateAliasCommand,
-  CreateAliasCommandInput,
-  CreateAliasCommandOutput,
+  type CreateAliasCommandInput,
+  type CreateAliasCommandOutput,
   LambdaClient,
   ResourceConflictException,
   UpdateAliasCommand,
-  UpdateAliasCommandInput,
-  UpdateAliasCommandOutput,
+  type UpdateAliasCommandInput,
+  type UpdateAliasCommandOutput,
   UpdateFunctionCodeCommand,
 } from '@aws-sdk/client-lambda'
-import assert from 'assert'
 
 type Inputs = {
   functionName: string
