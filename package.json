@@ -17,7 +17,7 @@
     "aws-sdk-client-mock": "4.1.0",
     "pnpm": "10.22.0",
     "typescript": "5.9.3",
-    "vitest": "4.0.9"
+    "vitest": "4.0.13"
   },
   "engines": {
     "node": "20.x"
