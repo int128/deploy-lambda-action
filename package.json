@@ -8,7 +8,7 @@
   "type": "module",
   "dependencies": {
     "@actions/core": "1.11.1",
-    "@aws-sdk/client-lambda": "3.940.0"
+    "@aws-sdk/client-lambda": "3.946.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.8",
