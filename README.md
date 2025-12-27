@@ -1,67 +1,19 @@
 # deploy-lambda-action [![ts](https://github.com/int128/deploy-lambda-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/deploy-lambda-action/actions/workflows/ts.yaml)
 
-This is an action to deploy a container image or archive to an existing Lambda function.
+This is an action to deploy a code to an existing Lambda function.
+It is equivalent to [`aws lambda update-function-code`](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/lambda/update-function-code.html) command.
 
 ## Getting Started
 
-To [update the container image of a Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-images.html),
+Before using this action, you need to create a Lambda function.
+This action is designed to manage a function and code separately as follows:
 
-```yaml
-jobs:
-  deploy:
-    steps:
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
-      - uses: int128/deploy-lambda-action@v1
-        with:
-          function-name: my-function
-          image-uri: ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION
-```
+- Manage a Lambda function with your IaC tool such as Terraform or CloudFormation.
+- Deploy the function code in GitHub Actions.
 
-To [update the code of a Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/configuration-function-zip.html),
+### Deploy an archive
 
-```yaml
-jobs:
-  deploy:
-    steps:
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
-      - uses: int128/deploy-lambda-action@v1
-        with:
-          function-name: my-function
-          zip-path: main.zip
-```
-
-This action publishes a new version of Lambda function.
-
-### Lambda function alias
-
-To deploy a container image to a Lambda function with an [alias](https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html):
-
-```yaml
-jobs:
-  deploy:
-    steps:
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
-      - uses: int128/deploy-lambda-action@v1
-        with:
-          function-name: my-function
-          image-uri: ACCOUNT.dkr.ecr.REGION.amazonaws.com/NAME:VERSION
-          alias-name: staging
-```
-
-This action creates an alias or updates it to the published version.
-It is useful for the pull request preview environment such as `pr-12345`.
-
-## Full examples
-
-### Lambda function with container image
-
-Here is an example to build and deploy a container image to Lambda function.
+Here is an example to deploy a Zip archive to a Lambda function.
 
 ```yaml
 jobs:
@@ -71,7 +23,38 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+      # Build an archive
+      - run: zip dist.zip ...
+      # Deploy a function
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
+          aws-region: REGION
+      - uses: int128/deploy-lambda-action@v1
+        with:
+          function-name: my-function
+          alias-name: ${{ github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number) || github.ref_name }}
+          alias-description: GitHub Actions ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          zip-path: dist.zip
+```
+
+When a pull request is opened or updated, it creates an alias of pull request number such as `pr-12345`.
+When a branch is pushed, it creates an alias of branch name such as `main` or `production`.
+
+### Deploy a container image
+
+Here is an example to deploy a container image to a Lambda function.
+
+```yaml
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
@@ -97,64 +80,65 @@ jobs:
           function-name: my-function
           image-uri: ${{ steps.metadata.outputs.tags }}
           alias-name: ${{ steps.metadata.outputs.version }}
+          alias-description: GitHub Actions ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 ```
 
-This example depends on the naming convention of [docker/metadata-action](https://github.com/docker/metadata-action).
+This example creates an alias following the naming convention of [docker/metadata-action](https://github.com/docker/metadata-action).
 
-When a pull request is opened or updated,
+When a pull request is opened or updated, it creates an alias of pull request number such as `pr-12345`.
+When a branch is pushed, it creates an alias of branch name such as `main` or `production`.
 
-- It builds a container image and pushes it into ECR.
-- It deploys it to an alias of pull request number such as `pr-12345`.
+## Terraform examples
 
-When a branch is pushed,
+### Lambda function
 
-- It builds a container image and pushes it into ECR.
-- It deploys it to an alias of branch name such as `main` or `production`.
+Here is an example of Lambda function with an archive.
 
-### Lambda function with archive
+```terraform
+# Terraform
+resource "aws_lambda_function" "example" {
+  function_name = "example"
+  role          = aws_iam_role.example_lambda.arn
+  handler       = "main"
+  runtime       = "provided.al2"
 
-Here is an example to build Go application and deploy it to Lambda function.
+  # The function code is updated by GitHub Actions.
+  filename = archive_file.dummy.output_path
+  lifecycle {
+    ignore_changes = [
+      filename,
+      publish,
+    ]
+  }
+}
 
-```yaml
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
+resource "aws_iam_role" "example_lambda" {
+  name               = "example-lambda"
+  assume_role_policy = data.aws_iam_policy_document.example_lambda_assume_role.json
+}
 
-      # Build an archive
-      - uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-      - run: go build -o main
-      - run: zip main.zip main
+data "aws_iam_policy_document" "example_lambda_assume_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+  }
+}
 
-      # Deploy a function
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
-          aws-region: REGION
-      - uses: int128/deploy-lambda-action@v1
-        with:
-          function-name: my-function
-          zip-path: main.zip
-          alias-name: ${{ github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number) || github.ref_name }}
+resource "archive_file" "dummy" {
+  type        = "zip"
+  output_path = "dummy.zip"
+
+  source {
+    content  = "dummy"
+    filename = "main"
+  }
+}
 ```
 
-When a pull request is opened or updated,
-
-- It deploys it to an alias of pull request number such as `pr-12345`.
-
-When a branch is pushed,
-
-- It deploys it to an alias of branch name such as `main` or `production`.
-
-## Prepare environment
-
-### IAM
+### GitHub Actions IAM role
 
 This action requires the following permissions:
 
@@ -164,8 +148,28 @@ This action requires the following permissions:
 
 Here is an example of IAM Role for GitHub Actions.
 
-```hcl
+```terraform
 # Terraform
+resource "aws_iam_role" "github_actions_deploy_lambda" {
+  name               = "github-actions-deploy-lambda"
+  assume_role_policy = data.aws_iam_policy_document.github_actions_deploy_lambda_assume_role.json
+}
+
+data "aws_iam_policy_document" "github_actions_deploy_lambda_assume_role" {
+  statement {
+    principals {
+      type        = "Federated"
+      identifiers = ["arn:aws:iam::ACCOUNT:oidc-provider/token.actions.githubusercontent.com"]
+    }
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    condition {
+      test     = "StringLike"
+      variable = "token.actions.githubusercontent.com:sub"
+      values   = ["repo:OWNER/REPO:*"]
+    }
+  }
+}
+
 resource "aws_iam_role_policy" "github_actions_deploy_lambda" {
   role   = aws_iam_role.github_actions_deploy_lambda.id
   name   = "update-lambda"
@@ -188,8 +192,6 @@ data "aws_iam_policy_document" "github_actions_deploy_lambda" {
 ```
 
 ## Specification
-
-This action is mostly equivalent to [`aws lambda update-function-code`](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/lambda/update-function-code.html) command.
 
 ### Inputs
 
