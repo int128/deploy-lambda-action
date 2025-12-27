@@ -16,6 +16,12 @@ This action is designed to manage a function and code separately as follows:
 Here is an example to deploy a zip archive to a Lambda function.
 
 ```yaml
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -39,14 +45,20 @@ jobs:
           zip-path: dist.zip
 ```
 
-When a pull request is opened or updated, it creates an alias of pull request number such as `pr-12345`.
-When a branch is pushed, it creates an alias of branch name such as `main` or `production`.
+For pull_request events, it creates an alias of pull request number such as `pr-12345`.
+For push events, it creates an alias of branch name such as `main` or `production`.
 
 ### Deploy a container image
 
 Here is an example to deploy a container image to a Lambda function.
 
 ```yaml
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -85,8 +97,8 @@ jobs:
 
 This example creates an alias following the naming convention of [docker/metadata-action](https://github.com/docker/metadata-action).
 
-When a pull request is opened or updated, it creates an alias of pull request number such as `pr-12345`.
-When a branch is pushed, it creates an alias of branch name such as `main` or `production`.
+For pull_request events, it creates an alias of pull request number such as `pr-12345`.
+For push events, it creates an alias of branch name such as `main` or `production`.
 
 ## Terraform examples
 
