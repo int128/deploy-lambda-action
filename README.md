@@ -1,7 +1,7 @@
 # deploy-lambda-action [![ts](https://github.com/int128/deploy-lambda-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/deploy-lambda-action/actions/workflows/ts.yaml)
 
 This is an action to deploy a code to an existing Lambda function.
-It is equivalent to [`aws lambda update-function-code`](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/lambda/update-function-code.html) command.
+It is equivalent to [`aws lambda update-function-code`](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/lambda/update-function-code.html) command but works without AWS CLI installed.
 
 ## Getting Started
 
@@ -13,7 +13,7 @@ This action is designed to manage a function and code separately as follows:
 
 ### Deploy an archive
 
-Here is an example to deploy a Zip archive to a Lambda function.
+Here is an example to deploy a zip archive to a Lambda function.
 
 ```yaml
 jobs:
