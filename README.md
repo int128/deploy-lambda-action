@@ -1,7 +1,6 @@
 # deploy-lambda-action [![ts](https://github.com/int128/deploy-lambda-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/deploy-lambda-action/actions/workflows/ts.yaml)
 
 This is an action to deploy a code to an existing Lambda function.
-It is equivalent to [`aws lambda update-function-code`](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/lambda/update-function-code.html) command but works without AWS CLI installed.
 
 ## Getting Started
 
@@ -11,7 +10,9 @@ This action is designed to manage a function and code separately as follows:
 - Manage a Lambda function with your IaC tool such as Terraform or CloudFormation.
 - Deploy the function code in GitHub Actions.
 
-### Deploy an archive
+You can choose either an archive or a container image as the deployment package.
+
+### (Option 1) Deploy an archive
 
 Here is an example to deploy a zip archive to a Lambda function.
 
@@ -48,7 +49,7 @@ jobs:
 For pull_request events, it creates an alias of pull request number such as `pr-12345`.
 For push events, it creates an alias of branch name such as `main` or `production`.
 
-### Deploy a container image
+### (Option 2) Deploy a container image
 
 Here is an example to deploy a container image to a Lambda function.
 
@@ -225,3 +226,18 @@ Either `image-uri` or `zip-path` must be set.
 | `function-version`     | Published version        |
 | `function-version-arn` | ARN of published version |
 | `function-alias-arn`   | ARN of alias             |
+
+## Alternative
+
+If you want to leave out using this action, you can directly call AWS CLI commands such as [`aws lambda update-function-code`](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/lambda/update-function-code.html).
+
+Here is an example script.
+
+```bash
+# Update function code with a zip archive
+VERSION="$(aws lambda update-function-code --function-name "$FUNCTION" --zip-file fileb://path/to/archive.zip --publish --query 'Version' --output text)"
+
+# Create or update an alias
+aws lambda update-alias --function-name "$FUNCTION" --name "$ALIAS" --function-version "$VERSION" ||
+aws lambda create-alias --function-name "$FUNCTION" --name "$ALIAS" --function-version "$VERSION"
+```
