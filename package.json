@@ -7,7 +7,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@actions/core": "2.0.3",
+    "@actions/core": "3.0.0",
     "@aws-sdk/client-lambda": "3.980.0"
   },
   "devDependencies": {
