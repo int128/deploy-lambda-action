@@ -12,6 +12,7 @@ import {
   type UpdateAliasCommandInput,
   type UpdateAliasCommandOutput,
   UpdateFunctionCodeCommand,
+  waitUntilPublishedVersionActive,
 } from '@aws-sdk/client-lambda'
 
 type Inputs = {
@@ -42,6 +43,11 @@ export const run = async (inputs: Inputs): Promise<Outputs> => {
   if (!inputs.aliasName) {
     return { functionVersion, functionVersionARN }
   }
+  core.info(`Waiting for version ${functionVersion} to be active`)
+  await waitUntilPublishedVersionActive(
+    { client, maxWaitTime: 300 },
+    { FunctionName: inputs.functionName, Qualifier: functionVersion },
+  )
   const alias = await createOrUpdateAlias(client, {
     FunctionName: inputs.functionName,
     FunctionVersion: functionVersion,

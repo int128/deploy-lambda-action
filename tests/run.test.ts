@@ -1,4 +1,4 @@
-import { CreateAliasCommand, LambdaClient, UpdateFunctionCodeCommand } from '@aws-sdk/client-lambda'
+import { CreateAliasCommand, GetFunctionConfigurationCommand, LambdaClient, UpdateFunctionCodeCommand } from '@aws-sdk/client-lambda'
 import { mockClient } from 'aws-sdk-client-mock'
 import { expect, test } from 'vitest'
 import { run } from '../src/run.js'
@@ -8,6 +8,9 @@ test('update function image with new alias', async () => {
   lambdaClientMock.on(UpdateFunctionCodeCommand).resolves({
     Version: '3',
     FunctionArn: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function:3',
+  })
+  lambdaClientMock.on(GetFunctionConfigurationCommand).resolves({
+    State: 'Active',
   })
   lambdaClientMock.on(CreateAliasCommand).resolves({
     AliasArn: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function:pr-123',
@@ -32,6 +35,9 @@ test('update function zip with new alias', async () => {
   lambdaClientMock.on(UpdateFunctionCodeCommand).resolves({
     Version: '3',
     FunctionArn: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function:3',
+  })
+  lambdaClientMock.on(GetFunctionConfigurationCommand).resolves({
+    State: 'Active',
   })
   lambdaClientMock.on(CreateAliasCommand).resolves({
     AliasArn: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function:pr-123',
