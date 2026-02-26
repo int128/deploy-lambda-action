@@ -99,7 +99,7 @@ const createOrUpdateAlias = async (
   try {
     return await client.send(new CreateAliasCommand(input))
   } catch (error) {
-    if (error instanceof ResourceConflictException) {
+    if (error instanceof Error && error.name === ResourceConflictException.name) {
       core.info(`Alias already exists: ${error.message}`)
       core.info(`Updating alias ${String(input.Name)}`)
       return await client.send(new UpdateAliasCommand(input))

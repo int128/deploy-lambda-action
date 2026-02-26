@@ -63,14 +63,18 @@ it('updates an existing alias', async () => {
     Version: '3',
     FunctionArn: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function:3',
   })
-  lambdaClientMock.on(CreateAliasCommand).rejects(
-    new ResourceConflictException({
-      message: 'ResourceConflictException',
-      $metadata: {
-        httpStatusCode: 409,
-      },
-    }),
-  )
+  lambdaClientMock.on(CreateAliasCommand).rejects({
+    // See the actual payload: https://github.com/int128/deploy-lambda-action/issues/1137
+    name: 'ResourceConflictException',
+    message: 'ResourceConflictException',
+    $metadata: {
+      httpStatusCode: 409,
+      requestId: '01234567-89ab-cdef-0123-456789abcdef',
+      attempts: 1,
+    },
+    $fault: 'client',
+    Type: 'User',
+  })
   lambdaClientMock.on(UpdateAliasCommand).resolves({
     AliasArn: 'arn:aws:lambda:ap-northeast-1:123456789012:function:my-function:pr-123',
   })
