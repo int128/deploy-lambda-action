@@ -7,7 +7,6 @@ import {
   type CreateAliasCommandInput,
   type CreateAliasCommandOutput,
   LambdaClient,
-  ResourceConflictException,
   UpdateAliasCommand,
   type UpdateAliasCommandInput,
   type UpdateAliasCommandOutput,
@@ -99,7 +98,7 @@ const createOrUpdateAlias = async (
   try {
     return await client.send(new CreateAliasCommand(input))
   } catch (error) {
-    if (error instanceof Error && error.name === ResourceConflictException.name) {
+    if (error instanceof Error && error.name === 'ResourceConflictException') {
       core.info(`Alias already exists: ${error.message}`)
       core.info(`Updating alias ${String(input.Name)}`)
       return await client.send(new UpdateAliasCommand(input))
