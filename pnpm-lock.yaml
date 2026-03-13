@@ -12,8 +12,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@aws-sdk/client-lambda':
-        specifier: 3.1000.0
-        version: 3.1000.0
+        specifier: 3.1003.0
+        version: 3.1003.0
     devDependencies:
       '@biomejs/biome':
         specifier: 2.4.6
@@ -71,8 +71,8 @@ packages:
   '@aws-crypto/util@5.2.0':
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
 
-  '@aws-sdk/client-lambda@3.1000.0':
-    resolution: {integrity: sha512-ofAVxy8j1qFUB8jB3yHWhy5ybYyTE6qsIVlzu+ITD0cKTLjg4xjmLaDmZA9dYpe4xSh7PSuv0ughBQMWwppOCw==}
+  '@aws-sdk/client-lambda@3.1003.0':
+    resolution: {integrity: sha512-xuvD0vEGEX6avskfAQ40LuVmIcgHGWomK2NeMF8S3t/b524DuCH9ZexgS13UfH+WJ2tRRcGBUrolE/E1AiawWA==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/core@3.973.18':
@@ -1059,7 +1059,7 @@ snapshots:
       '@smithy/util-utf8': 2.3.0
       tslib: 2.6.2
 
-  '@aws-sdk/client-lambda@3.1000.0':
+  '@aws-sdk/client-lambda@3.1003.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
