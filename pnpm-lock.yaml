@@ -12,8 +12,8 @@ importers:
         specifier: 3.0.1
         version: 3.0.1
       '@aws-sdk/client-lambda':
-        specifier: 3.1059.0
-        version: 3.1059.0
+        specifier: 3.1063.0
+        version: 3.1063.0
     devDependencies:
       '@biomejs/biome':
         specifier: 2.4.16
@@ -71,8 +71,8 @@ packages:
   '@aws-crypto/util@5.2.0':
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
 
-  '@aws-sdk/client-lambda@3.1059.0':
-    resolution: {integrity: sha512-26p44K6Wx0HrXIcIs3mSGcANMCGnmGrA2nw1IFK9eVqfB7PwofJjRmX+jw1NQaDTzbFZ3HPlHeYkSpN4627INA==}
+  '@aws-sdk/client-lambda@3.1063.0':
+    resolution: {integrity: sha512-xn2c+C2/le5Iya243PVsH+s4yhs0Oo5wK+CopVJfhZ2uH6WNEWre+wQ6D/q8FkFZaaPP/cwejVBVUEaMsD98Kw==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/core@3.974.19':
@@ -125,10 +125,6 @@ packages:
 
   '@aws-sdk/types@3.973.12':
     resolution: {integrity: sha512-43ajd1NF0RMgX5k0hxCNUyEdrtFUsb2aHT2QvpktSC/2Eyb2Jr/JPVqdp0XIoaHWikZJq5tNWSLO6kB5q2eMCA==}
-    engines: {node: '>=20.0.0'}
-
-  '@aws-sdk/types@3.973.9':
-    resolution: {integrity: sha512-kuBfgQVdcz5Bmapc4A13YbpVw/pXkesfhetcFYwbntqas8sF41OHyd4o28+/TG2ZQdHBsv90Lsu5y6oitvYCdg==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/util-locate-window@3.965.5':
@@ -356,10 +352,6 @@ packages:
 
   '@smithy/signature-v4@5.4.6':
     resolution: {integrity: sha512-Ojg4B6oIDlIr1R86xCDJt1zJWnYa0VINmqdjfe9qxWjdRivHalZ3iSlQgVqYbW0MdpFOC5XfHEWsnbmdnpIILQ==}
-    engines: {node: '>=18.0.0'}
-
-  '@smithy/types@4.14.2':
-    resolution: {integrity: sha512-P+otAxbV4CqBybp7EkcJCrig63yE2E7PuNVOmilVMRcx/O+QDzGULTrKsq4DV13gSfak9ObPrWaHl/9bL5YcWw==}
     engines: {node: '>=18.0.0'}
 
   '@smithy/types@4.14.3':
@@ -795,7 +787,7 @@ snapshots:
   '@aws-crypto/crc32@5.2.0':
     dependencies:
       '@aws-crypto/util': 5.2.0
-      '@aws-sdk/types': 3.973.9
+      '@aws-sdk/types': 3.973.12
       tslib: 2.8.1
 
   '@aws-crypto/sha256-browser@5.2.0':
@@ -803,7 +795,7 @@ snapshots:
       '@aws-crypto/sha256-js': 5.2.0
       '@aws-crypto/supports-web-crypto': 5.2.0
       '@aws-crypto/util': 5.2.0
-      '@aws-sdk/types': 3.973.9
+      '@aws-sdk/types': 3.973.12
       '@aws-sdk/util-locate-window': 3.965.5
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
@@ -811,7 +803,7 @@ snapshots:
   '@aws-crypto/sha256-js@5.2.0':
     dependencies:
       '@aws-crypto/util': 5.2.0
-      '@aws-sdk/types': 3.973.9
+      '@aws-sdk/types': 3.973.12
       tslib: 2.8.1
 
   '@aws-crypto/supports-web-crypto@5.2.0':
@@ -820,11 +812,11 @@ snapshots:
 
   '@aws-crypto/util@5.2.0':
     dependencies:
-      '@aws-sdk/types': 3.973.9
+      '@aws-sdk/types': 3.973.12
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
 
-  '@aws-sdk/client-lambda@3.1059.0':
+  '@aws-sdk/client-lambda@3.1063.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
@@ -964,11 +956,6 @@ snapshots:
   '@aws-sdk/types@3.973.12':
     dependencies:
       '@smithy/types': 4.14.3
-      tslib: 2.8.1
-
-  '@aws-sdk/types@3.973.9':
-    dependencies:
-      '@smithy/types': 4.14.2
       tslib: 2.8.1
 
   '@aws-sdk/util-locate-window@3.965.5':
@@ -1147,10 +1134,6 @@ snapshots:
     dependencies:
       '@smithy/core': 3.24.6
       '@smithy/types': 4.14.3
-      tslib: 2.8.1
-
-  '@smithy/types@4.14.2':
-    dependencies:
       tslib: 2.8.1
 
   '@smithy/types@4.14.3':
