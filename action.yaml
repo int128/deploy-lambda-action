@@ -31,5 +31,5 @@ outputs:
     description: ARN of alias
 
 runs:
-  using: 'node24'
-  main: 'dist/index.js'
+  using: "node24"
+  main: "dist/index.js"
